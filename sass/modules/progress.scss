@@ -1,0 +1,24 @@
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background-color: lightgoldenrodyellow;
+  overflow: hidden;
+  border: 1px solid #333;
+  border-radius: 5px;
+}
+
+@keyframes loading {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.loading-animation {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  // animation: loading 60s infinite;
+}

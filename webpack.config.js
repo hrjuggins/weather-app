@@ -1,6 +1,7 @@
 const webpack = require("webpack");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const dotenv = require("dotenv");
 
 module.exports = {
   // 1
@@ -23,6 +24,9 @@ module.exports = {
   },
   resolve: {
     extensions: ["*", ".js", ".jsx"],
+    alias: {
+      process: "process/browser",
+    },
   },
   output: {
     path: path.resolve(__dirname, "build"), // change this
@@ -30,6 +34,9 @@ module.exports = {
     filename: "bundle.js",
   },
   plugins: [
+    new webpack.DefinePlugin({
+      "process.env": JSON.stringify(dotenv.config().parsed), // it will automatically pick up key values from .env file
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       template: path.resolve("./index.html"),
