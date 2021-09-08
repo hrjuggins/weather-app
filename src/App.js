@@ -4,13 +4,15 @@ import ProgressBar from "./components/ProgressBar";
 
 const App = () => {
   const city = "London";
+  const reloadTime = 10;
+  const currentDate = new Date();
+
   const [currentWeather, setCurrentWeather] = useState({
     temp: 0,
   });
   const [forecast, setForecast] = useState({});
-  const reloadTime = 60;
   const [progress, setProgress] = useState(reloadTime);
-  const currentDate = new Date();
+  const [message, setMessage] = useState("");
 
   const fetchData = async () => {
     try {
@@ -19,7 +21,7 @@ const App = () => {
         `${process.env.API_URL}/weather?q=${city}&appid=${process.env.API_KEY}&units=metric`
       );
       const current = await currentResponse.json();
-
+      console.log(current);
       setCurrentWeather((prev) => ({ ...prev, temp: current.main.temp }));
 
       // get forecast data
@@ -36,8 +38,9 @@ const App = () => {
       const five = forecast.list[39];
 
       setForecast((prev) => ({ ...prev, one, two, three, four, five }));
+      setMessage("");
     } catch (error) {
-      console.log(error);
+      setMessage("Problem fetching weather");
     }
   };
 
@@ -53,9 +56,8 @@ const App = () => {
     }, 1000);
     // // Fetch every minute
     interval = setInterval(() => {
-      setLoading(true);
       fetchData();
-    }, 60000);
+    }, reloadTime * 1000);
   }, []);
 
   useEffect(() => {
@@ -112,7 +114,10 @@ const App = () => {
         </motion.p>
       </header>
       <ProgressBar progress={progress} duration={reloadTime} />
-      <section className="forecast-container">{renderForecast()}</section>
+      <section className="forecast-container">
+        {message && <p className="error-message">{message}</p>}
+        {renderForecast()}
+      </section>
     </div>
   );
 };
