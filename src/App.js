@@ -4,7 +4,7 @@ import ProgressBar from "./components/ProgressBar";
 
 const App = () => {
   const city = "London";
-  const reloadTime = 10;
+  const reloadTime = 60;
   const currentDate = new Date();
 
   const [currentWeather, setCurrentWeather] = useState({
