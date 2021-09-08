@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import ProgressBar from "./components/ProgressBar";
+import AnimatedTemp from "./components/AnimatedTemp";
 
 const App = () => {
   const city = "London";
@@ -21,7 +21,6 @@ const App = () => {
         `${process.env.API_URL}/weather?q=${city}&appid=${process.env.API_KEY}&units=metric`
       );
       const current = await currentResponse.json();
-      console.log(current);
       setCurrentWeather((prev) => ({ ...prev, temp: current.main.temp }));
 
       // get forecast data
@@ -85,7 +84,7 @@ const App = () => {
           <p>
             {new Date(dt * 1000).toLocaleString("en-US", { weekday: "short" })}
           </p>
-          <p>{temp}°</p>
+          <AnimatedTemp temp={temp} />
           <div>
             <img src={`http://openweathermap.org/img/wn/${icon}.png`} />
             <p>{description}</p>
@@ -101,17 +100,7 @@ const App = () => {
       <header className="header">
         <h1>London</h1>
         <p>{currentDate.toLocaleTimeString([], { timeStyle: "short" })} GMT</p>
-        <motion.p
-          key={currentWeather.temp}
-          initial={{ y: -10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{
-            ease: "easeOut",
-            duration: 1,
-          }}
-        >
-          {currentWeather.temp.toString().slice(0, 2)}°
-        </motion.p>
+        <AnimatedTemp temp={currentWeather.temp} />
       </header>
       <ProgressBar progress={progress} duration={reloadTime} />
       <section className="forecast-container">
