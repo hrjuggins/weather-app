@@ -1,24 +1,21 @@
-.progress-bar {
-  width: 100%;
-  height: 10px;
-  background-color: lightgoldenrodyellow;
-  overflow: hidden;
-  border: 1px solid #333;
-  border-radius: 5px;
-}
-
-@keyframes loading {
-  0% {
-    transform: translateX(0);
+.progress-container {
+  padding: 5px 10px;
+  background-color: $dark-grey;
+  p {
+    font-size: 0.8rem;
   }
-  100% {
-    transform: translateX(100%);
-  }
-}
+  .progress-bar {
+    width: calc(100% - 4px);
+    height: 10px;
+    overflow: hidden;
+    border: 2px solid darken($dark-grey, 5%);
+    border-radius: 5px;
+    background-color: $orange;
 
-.loading-animation {
-  width: 100%;
-  height: 100%;
-  background-color: white;
-  // animation: loading 60s infinite;
+    .progress-bar-animation {
+      width: 100%;
+      height: 100%;
+      background-color: $dark-grey;
+    }
+  }
 }

@@ -1,0 +1,36 @@
+.forecast-container {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(24, 24, 24);
+  padding: 10px 0;
+  article {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+    align-items: center;
+    background-color: $mid-grey;
+    margin: 5px 10px;
+    border-radius: 15px;
+    padding: 0 20px;
+    & > p {
+      color: white;
+    }
+    & > p:first-of-type,
+    & > p:nth-of-type(2) {
+      text-transform: uppercase;
+      font-size: 1.2rem;
+    }
+    div {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      & > img {
+        margin: 0;
+      }
+      & > p {
+        margin: 0 0 10px;
+        font-size: 0.6rem;
+        text-transform: uppercase;
+      }
+    }
+  }
+}
