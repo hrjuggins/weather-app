@@ -4,7 +4,7 @@ const App = () => {
   return (
     <div className="container">
       <img src="https://green.cdn.energy/branding/logo-r.svg" />
-      <h1>React Starter Project</h1>
+      <h1>React Weather App</h1>
     </div>
   );
 };
