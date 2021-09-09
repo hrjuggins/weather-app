@@ -1,30 +1,39 @@
 import React, { useEffect, useState } from "react";
-import ProgressBar from "./components/ProgressBar";
-import AnimatedTemp from "./components/AnimatedTemp";
-import ForecastDay from "./components/ForecastDay";
+import { AnimatedTemp, Forecast, ProgressBar, Search } from "./components";
+import { useAppContext } from "./hooks/useAppContext";
 
 const App = () => {
-  const city = "London";
-  const reloadTime = 60;
-  const currentDate = new Date();
-
-  const [currentWeather, setCurrentWeather] = useState({
-    temp: 0,
-  });
-  const [forecast, setForecast] = useState({});
+  const {
+    city,
+    reloadTime,
+    currentTemp,
+    setCurrentTemp,
+    setForecast,
+    message,
+    setMessage,
+  } = useAppContext();
   const [progress, setProgress] = useState(reloadTime);
-  const [message, setMessage] = useState("");
 
-  const fetchData = async () => {
+  const currentDate = new Date();
+  let interval = null;
+  let progressInterval = null;
+
+  const fetchCurrentData = async () => {
     try {
       // get current weather
       const currentResponse = await fetch(
         `${process.env.API_URL}/weather?q=${city}&appid=${process.env.API_KEY}&units=metric`
       );
       const current = await currentResponse.json();
-      setCurrentWeather((prev) => ({ ...prev, temp: current.main.temp }));
+      setCurrentTemp(current.main.temp);
+      setMessage("");
+    } catch (error) {
+      setMessage("Problem fetching weather");
+    }
+  };
 
-      // get forecast data
+  const fetchForecastData = async () => {
+    try {
       const forecastResponse = await fetch(
         `${process.env.API_URL}/forecast?q=${city}&appid=${process.env.API_KEY}&units=metric`
       );
@@ -36,16 +45,17 @@ const App = () => {
       const three = forecast.list[24];
       const four = forecast.list[32];
       const five = forecast.list[39];
-
-      setForecast((prev) => ({ ...prev, one, two, three, four, five }));
+      setForecast({ one, two, three, four, five });
       setMessage("");
     } catch (error) {
-      setMessage("Problem fetching weather");
+      setMessage("Problem fetching forecast");
     }
   };
 
-  let interval = null;
-  let progressInterval = null;
+  const fetchData = async () => {
+    fetchCurrentData();
+    fetchForecastData();
+  };
 
   useEffect(() => {
     // Fetch on first load
@@ -68,40 +78,17 @@ const App = () => {
     }
   }, [progress]);
 
-  const renderForecast = () => {
-    let forecastData = [];
-    for (const day in forecast) {
-      const index = Object.keys(forecast).indexOf(day);
-      // Pull out data we will need for app
-      const {
-        dt,
-        main: { temp },
-        weather,
-      } = forecast[day];
-      const { description, icon } = weather[0];
-
-      forecastData.push(
-        <ForecastDay
-          key={day}
-          index={index}
-          data={{ dt, temp, weather, description, icon }}
-        />
-      );
-    }
-    return forecastData;
-  };
-
   return (
     <div className="container">
       <header className="header">
-        <h1>London</h1>
+        <h1>{city}</h1>
         <p>{currentDate.toLocaleTimeString([], { timeStyle: "short" })} GMT</p>
-        <AnimatedTemp temp={currentWeather.temp} />
+        <AnimatedTemp temp={currentTemp} />
       </header>
       <ProgressBar progress={progress} duration={reloadTime} />
       <section className="forecast-container">
         {message && <p className="error-message">{message}</p>}
-        {renderForecast()}
+        <Forecast />
       </section>
     </div>
   );
