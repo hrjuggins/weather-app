@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ProgressBar from "./components/ProgressBar";
 import AnimatedTemp from "./components/AnimatedTemp";
+import ForecastDay from "./components/ForecastDay";
 
 const App = () => {
   const city = "London";
@@ -70,6 +71,7 @@ const App = () => {
   const renderForecast = () => {
     let forecastData = [];
     for (const day in forecast) {
+      const index = Object.keys(forecast).indexOf(day);
       // Pull out data we will need for app
       const {
         dt,
@@ -79,17 +81,11 @@ const App = () => {
       const { description, icon } = weather[0];
 
       forecastData.push(
-        <article key={day}>
-          {/* Multiply by 1000 to get correct date */}
-          <p>
-            {new Date(dt * 1000).toLocaleString("en-US", { weekday: "short" })}
-          </p>
-          <AnimatedTemp temp={temp} />
-          <div>
-            <img src={`http://openweathermap.org/img/wn/${icon}.png`} />
-            <p>{description}</p>
-          </div>
-        </article>
+        <ForecastDay
+          key={day}
+          index={index}
+          data={{ dt, temp, weather, description, icon }}
+        />
       );
     }
     return forecastData;
